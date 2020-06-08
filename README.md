@@ -83,19 +83,19 @@ Terraformize supports 3 authentication methods:
 
 # Endpoints
 
-* POST /v1/module_folder_name/workspace_name
+* POST /v1/module_folder_name/key
     * runs `terraform apply` for you
-    * takes care of auto approval of the run, auto init & workspace switching as needed
+    * takes care of auto approval of the run, auto init & set key backend in s3
     * takes variables which are passed to `terraform apply` as a JSON in the body of the message in the format of `{"var_key1": "var_value1", "var_key2": "var_value2"}`
     * Returns 200 HTTP status code if everything is ok, 404 if you gave it a non existing module_folder_name path & 400 if the `terraform apply` ran but failed to make all needed modifications
     * Also returns a JSON body of `{"init_stdout": "...", "init_stderr": "...", "stderr": "...", "stdout": "..."}` with the stderr & stdout of the `terraform apply` & `terraform init` run
-* DELETE /v1/module_folder_name/workspace_name
+* DELETE /v1/module_folder_name/key
     * runs `terraform destroy` for you
-    * takes care of auto approval of the run, auto init & workspace switching as needed
+    * takes care of auto approval of the run, auto init & set key backend in s3
     * takes variables which are passed to `terraform destroy` as a JSON in the body of the message in the format of `{"var_key1": "var_value1", "var_key2": "var_value2"}`
     * Returns 200 HTTP status code if everything is ok, 404 if you gave it a non existing module_folder_name path & 400 if the `terraform destroy` ran but failed to make all needed modifications
     * Also returns a JSON body of `{"init_stdout": "...", "init_stderr": "...", "stderr": "...", "stdout": "..."}` with the stderr & stdout of the `terraform destroy` & `terraform init` run
-    * In order to preserve the history of terraform runs in your backend the workspace is not deleted automatically, only the infrastructure is destroyed
+    * In order to preserve the history of terraform runs in your backend, only the infrastructure is destroyed
 * GET /v1/health
     * Returns 200 HTTP status code
     * Also returns a JSON body of {"healthy": true}

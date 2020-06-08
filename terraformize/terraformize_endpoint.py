@@ -79,28 +79,26 @@ def verify_token(token: Optional[str]) -> bool:
         return False
 
 
-@app.route('/' + API_VERSION + '/<module_path>/<workspace_name>', methods=["POST"])
+@app.route('/' + API_VERSION + '/<module_path>/<key>', methods=["POST"])
 @multi_auth.login_required
-def apply_terraform(module_path: str, workspace_name: str) -> Tuple[str, int]:
+def apply_terraform(module_path: str, key: str) -> Tuple[str, int]:
     """
     A REST endpoint to apply terraform modules at a given module path inside the main module directory path at a given
     workspace
 
     Arguments:
-        :param module_path:  the name of the subdirectory for the module inside the "terraform_modules_path" to run
-        "terraform apply" at
-        :param workspace_name: the name of the workspace to run "terraform apply" at
+        :param module_path:  the name of the subdirectory for the module inside the "terraform_modules_path" to run "terraform apply" at
+        :param key: the name of the key to run "terraform apply" at backend
 
     Returns:
         :return return_body: a JSON of the stdout & stderr from the terraform run
         :return terraform_return_code: the terraform return code
 
     Exceptions:
-        :except FileNotFoundError: will return HTTP 404 with a JSON of the stderr it catch from "terraform init" or
-        "terraform apply"
+        :except FileNotFoundError: will return HTTP 404 with a JSON of the stderr it catch from "terraform init" or "terraform apply"
     """
     try:
-        terraform_object = Terraformize(workspace_name, configuration["terraform_modules_path"] + "/" + module_path,
+        terraform_object = Terraformize(key, configuration["terraform_modules_path"] + "/" + module_path,
                                         terraform_bin_path=configuration["terraform_binary_path"])
         terraform_return_code, terraform_stdout, terraform_stderr = terraform_object.apply(
             request.json, configuration["parallelism"]
@@ -117,28 +115,25 @@ def apply_terraform(module_path: str, workspace_name: str) -> Tuple[str, int]:
         return jsonify({"error": str(error_log)}), 404
 
 
-@app.route('/' + API_VERSION + '/<module_path>/<workspace_name>', methods=["DELETE"])
+@app.route('/' + API_VERSION + '/<module_path>/<key>', methods=["DELETE"])
 @multi_auth.login_required
-def destroy_terraform(module_path: str, workspace_name: str) -> Tuple[str, int]:
+def destroy_terraform(module_path: str, key: str) -> Tuple[str, int]:
     """
-    A REST endpoint to destroy terraform modules at a given module path inside the main module directory path at a given
-    workspace
+    A REST endpoint to destroy terraform modules at a given module path inside the main module directory path 
 
     Arguments:
-        :param module_path:  the name of the subdirectory for the module inside the "terraform_modules_path" to run
-        "terraform destroy" at
-        :param workspace_name: the name of the workspace to run "terraform destroy" at
+        :param module_path:  the name of the subdirectory for the module inside the "terraform_modules_path" to run "terraform destroy" at
+        :param key: the name of the key to run "terraform destroy" at backend
 
     Returns:
         :return return_body: a JSON of the stdout & stderr from the terraform run
         :return terraform_return_code: the terraform return code
 
     Exceptions:
-        :except FileNotFoundError: will return HTTP 404 with a JSON of the stderr it catch from "terraform init" or
-        "terraform destroy"
+        :except FileNotFoundError: will return HTTP 404 with a JSON of the stderr it catch from "terraform init" or "terraform destroy"
     """
     try:
-        terraform_object = Terraformize(workspace_name, configuration["terraform_modules_path"] + "/" + module_path,
+        terraform_object = Terraformize(key, configuration["terraform_modules_path"] + "/" + module_path,
                                         terraform_bin_path=configuration["terraform_binary_path"])
         terraform_return_code, terraform_stdout, terraform_stderr = terraform_object.destroy(
             request.json, configuration["parallelism"]

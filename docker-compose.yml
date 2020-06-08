@@ -6,10 +6,13 @@ services:
     ports:
       - '80:80'
     restart: always
+    #volumes:
+    #  - $PWD/terraform_modules:/www/terraform_modules
     environment:
-      AUTH_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGkiOiJ0ZXJyYWZvcm1pemUifQ.KzUGr_Ym7gVKKe3VQNb1liF1JkScfBYyc5zimdG3eJY
+      AUTH_TOKEN: 
       #BASIC_AUTH_USER: leonardo
       #BASIC_AUTH_PASSWORD: 081264
-      #AWS_ACCESS_KEY_ID: 
-      #AWS_SECRET_ACCESS_KEY: 
-      #AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: 
+      AWS_SECRET_ACCESS_KEY: 
+      AWS_DEFAULT_REGION: us-east-1
+      TF_PLUGIN_CACHE_DIR: "/root/.terraform.d/plugin-cache"
