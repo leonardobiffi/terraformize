@@ -189,3 +189,6 @@ venv/**
 **/.terraform/*
 **/terraform.tfstate.d/*
 .terraform/
+
+# docker-compose
+docker-local.yml
