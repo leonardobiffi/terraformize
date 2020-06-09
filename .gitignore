@@ -192,3 +192,6 @@ venv/**
 
 # docker-compose
 docker-local.yml
+
+# ssh-config
+ssh-config/
