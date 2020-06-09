@@ -15,3 +15,5 @@ chdir = "/www"
 loglevel = os.getenv("LOG_LEVEL", "error")
 errorlog = "-"
 accesslog = "-"
+
+timeout = 600
