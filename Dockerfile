@@ -14,7 +14,14 @@ ENV PYTHONUNBUFFERED=1
 ENV TF_IN_AUTOMATION=true
 
 # install required packages
-RUN apk add --no-cache libffi-dev
+RUN apk add --no-cache libffi-dev git openssh openrc
+
+# config ssh
+RUN mkdir /root/.ssh
+COPY ssh-config/* /root/.ssh/
+RUN ssh-keyscan -H bitbucket.org >> /root/.ssh/known_hosts
+RUN chmod 700 -R /root/.ssh/
+RUN rc-update add sshd default
 
 # copy terraform binary
 COPY --from=terraform /bin/terraform /usr/local/bin/terraform
